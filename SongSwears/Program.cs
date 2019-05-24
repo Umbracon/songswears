@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Net;
+using System.IO;
+using System.Text.RegularExpressions;
 
 namespace SongSwears
 {
@@ -7,8 +9,41 @@ namespace SongSwears
     {
         public static void Main()
         {
-            var songAnalysis = new SongAnalysis("Kazik", "12 groszy");
+
+            //var songAnalysis = new SongAnalysis("Kazik", "12 groszy");
+            var tekst = "Kurwa, programowanie jest w chuj fajne, no kurwa kurwa!";
+            var censor = new Censor();
+            Console.WriteLine(censor.Fix(tekst));
             Console.ReadLine();
+        }
+    }
+
+    class Censor
+    {
+        string[] badWords;
+        public Censor()
+        {
+            var profanitiesFile = File.ReadAllText("profanities.txt");
+            profanitiesFile = profanitiesFile.Replace("*", "");
+            profanitiesFile = profanitiesFile.Replace("(", "");
+            profanitiesFile = profanitiesFile.Replace(")", "");
+            profanitiesFile = profanitiesFile.Replace("\"", "");
+            badWords = profanitiesFile.Split(',');
+        }
+
+        internal string Fix(string tekst)
+        {
+            foreach (var word in badWords)
+            {
+                tekst = ReplaceBadWord(tekst, word);
+            }
+            return tekst;
+        }
+
+        private static string ReplaceBadWord(string tekst, string word)
+        {
+            var pattern = "\\b" + word + "\\b";
+            return Regex.Replace(tekst, pattern, "______", RegexOptions.IgnoreCase);
         }
     }
 
