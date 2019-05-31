@@ -1,65 +1,67 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Net;
-using System.IO;
 using System.Text.RegularExpressions;
+using Newtonsoft.Json;
 
 namespace SongSwears
 {
     internal class Program
     {
-        public static void Main()
+        static void Main()
         {
-
-            //var songAnalysis = new SongAnalysis("Kazik", "12 groszy");
-            var tekst = "Kurwa, programowanie jest w chuj fajne, no kurwa kurwa!";
-            var censor = new Censor();
-            Console.WriteLine(censor.Fix(tekst));
+            var eminemSwearStats = new SwearStats();
+            var song = new Song("Eminem", "Stan");
+            eminemSwearStats.AddSwearsFrom(song);
+            //var censor = new Censor();
+            //Console.WriteLine(censor.Fix(song.lyrics));
             Console.ReadLine();
         }
     }
 
-    class Censor
+    class SwearStats:Censor
     {
-        string[] badWords;
-        public Censor()
+        Dictionary<string, int> allSwears = new Dictionary<string, int>();
+        public SwearStats()
         {
-            var profanitiesFile = File.ReadAllText("profanities.txt");
-            profanitiesFile = profanitiesFile.Replace("*", "");
-            profanitiesFile = profanitiesFile.Replace("(", "");
-            profanitiesFile = profanitiesFile.Replace(")", "");
-            profanitiesFile = profanitiesFile.Replace("\"", "");
-            badWords = profanitiesFile.Split(',');
+
         }
 
-        internal string Fix(string tekst)
+        public void AddSwearsFrom(Song song)
         {
             foreach (var word in badWords)
             {
-                tekst = ReplaceBadWord(tekst, word);
+                var occurrences = song.CountOccurrence(word);
             }
-            return tekst;
-        }
-
-        private static string ReplaceBadWord(string tekst, string word)
-        {
-            var pattern = "\\b" + word + "\\b";
-            return Regex.Replace(tekst, pattern, "______", RegexOptions.IgnoreCase);
         }
     }
 
-    class SongAnalysis
+    class Song
     {
-        public SongAnalysis(string band, string song)
+        public string title;
+        public string artist;
+        public string lyrics;
+
+        public Song(string band, string songName)
         {
             var browser = new WebClient();
-            var url = "https://api.lyrics.ovh/v1/" + band + "/" + song;
+            var url = "https://api.lyrics.ovh/v1/" + band + "/" + songName;
             var json = browser.DownloadString(url);
+            var lyricsData = JsonConvert.DeserializeObject<LyricsovhAnswer>(json);
 
-            Console.WriteLine(json);
+            title = songName;
+            artist = band;
+            lyrics = lyricsData.lyrics;
+        }
+
+        public int CountOccurrence(string word)
+        {
+            var pattern = "\\b" + word + "\\b";
+            return Regex.Matches(lyrics, pattern, RegexOptions.IgnoreCase).Count;
         }
     }
 
-    public class LyricsovhAnswer
+    class LyricsovhAnswer
     {
         public string lyrics;
         public string error;
