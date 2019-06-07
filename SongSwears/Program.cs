@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Net;
-using System.Text.RegularExpressions;
-using Newtonsoft.Json;
 
 namespace SongSwears
 {
@@ -10,60 +7,53 @@ namespace SongSwears
     {
         static void Main()
         {
-            var eminemSwearStats = new SwearStats();
-            var song = new Song("Eminem", "Stan");
-            eminemSwearStats.AddSwearsFrom(song);
-            //var censor = new Censor();
-            //Console.WriteLine(censor.Fix(song.lyrics));
+            var eminemSwearStats = new RapperSwearsStats("Eminem");
+            eminemSwearStats.AddSong("Stan");
+
+            var TwoPacStats = new RapperSwearsStats("2Pac");
+            TwoPacStats.AddSong("Changes");
+
+            var rappers = new List<RapperSwearsStats>();
+            rappers.Add(eminemSwearStats);
+            rappers.Add(TwoPacStats);
+
+            var unknownSong = new Song("Eminem", "Monster");
+            var tinder = new RapperTinder(rappers, unknownSong);
+
             Console.ReadLine();
         }
     }
 
-    class SwearStats:Censor
+    internal class RapperTinder
     {
-        Dictionary<string, int> allSwears = new Dictionary<string, int>();
-        public SwearStats()
-        {
+        private List<RapperSwearsStats> rappers;
+        private Song unknownSong;
 
-        }
-
-        public void AddSwearsFrom(Song song)
+        public RapperTinder(List<RapperSwearsStats> rappers, Song unknownSong)
         {
-            foreach (var word in badWords)
+            this.rappers = rappers;
+            this.unknownSong = unknownSong;
+
+            var songSwearStats = new SwearStats();
+            songSwearStats.AddSwearsFrom(unknownSong);
+
+            foreach (var rapper in rappers)
             {
-                var occurrences = song.CountOccurrence(word);
+                var score = rapper.FindCommonSwearsScore(songSwearStats);
+                Console.WriteLine(rapper.name + ": " + score + " points.");
             }
         }
     }
 
-    class Song
+    public class RapperSwearsStats : SwearStats
     {
-        public string title;
-        public string artist;
-        public string lyrics;
+        public string name;
+        public RapperSwearsStats(string name) => this.name = name;
 
-        public Song(string band, string songName)
+        public void AddSong(string title)
         {
-            var browser = new WebClient();
-            var url = "https://api.lyrics.ovh/v1/" + band + "/" + songName;
-            var json = browser.DownloadString(url);
-            var lyricsData = JsonConvert.DeserializeObject<LyricsovhAnswer>(json);
-
-            title = songName;
-            artist = band;
-            lyrics = lyricsData.lyrics;
+            var song = new Song(name, title);
+            AddSwearsFrom(song);
         }
-
-        public int CountOccurrence(string word)
-        {
-            var pattern = "\\b" + word + "\\b";
-            return Regex.Matches(lyrics, pattern, RegexOptions.IgnoreCase).Count;
-        }
-    }
-
-    class LyricsovhAnswer
-    {
-        public string lyrics;
-        public string error;
     }
 }

@@ -47,8 +47,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Censor.cs" />
+    <Compile Include="LyricsovhAnswer.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Song.cs" />
+    <Compile Include="SwearStats.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
