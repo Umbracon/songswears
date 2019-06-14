@@ -36,8 +36,6 @@ namespace SongSwears
             {
                 if (anotherStats.allSwears.ContainsKey(myWord.Key))
                     score++;
-                else
-                    score--;
             }
             return score;
         }
