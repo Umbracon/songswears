@@ -1,7 +1,6 @@
-﻿using System.Net;
-using System.Text.RegularExpressions;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using SearchingCurses;
+using System.Text.RegularExpressions;
 
 namespace SongSwears
 {
@@ -10,22 +9,25 @@ namespace SongSwears
         public string title;
         public string artist;
         public string lyrics;
-
-        public Song(string band, string songName)
+        public Song(string artistName, string songName)
         {
-            var url = "https://api.lyrics.ovh/v1/" + band + "/" + songName;
+            var url = "https://api.lyrics.ovh/v1/" + artistName + "/" + songName;
             var json = WebCache.GetOrDownload(url);
-            var lyricsData = JsonConvert.DeserializeObject<LyricsovhAnswer>(json);
+            var lyricsData = JsonConvert.DeserializeObject<ApiAnswer>(json);
 
             title = songName;
-            artist = band;
+            artist = artistName;
             lyrics = lyricsData.lyrics;
-        }
 
+        }
         public int CountOccurrence(string word)
         {
             var pattern = "\\b" + word + "\\b";
             return Regex.Matches(lyrics, pattern, RegexOptions.IgnoreCase).Count;
+        }
+        public void AddLyrics(string insertedLyrics)
+        {
+            lyrics = insertedLyrics;
         }
     }
 }

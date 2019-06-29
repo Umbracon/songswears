@@ -1,6 +1,6 @@
 ﻿namespace SongSwears
 {
-    class LyricsovhAnswer
+    internal class ApiAnswer
     {
         public string lyrics;
         public string error;

@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // Ogólne informacje o zestawie są kontrolowane poprzez następujący 
 // zestaw atrybutów. Zmień wartości tych atrybutów, aby zmodyfikować informacje
 // powiązane z zestawem.
-[assembly: AssemblyTitle("ConsoleApp7")]
+[assembly: AssemblyTitle("SongSwears")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("ConsoleApp7")]
+[assembly: AssemblyProduct("SongSwears")]
 [assembly: AssemblyCopyright("Copyright ©  2019")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -20,14 +20,14 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // Następujący identyfikator GUID jest identyfikatorem biblioteki typów w przypadku udostępnienia tego projektu w modelu COM
-[assembly: Guid("349375f7-899c-4f4c-b6b0-9624abcd8fc2")]
+[assembly: Guid("366fef10-21c7-40a9-86e0-617dedb73c74")]
 
 // Informacje o wersji zestawu zawierają następujące cztery wartości:
 //
 //      Wersja główna
 //      Wersja pomocnicza
 //      Numer kompilacji
-//      Rewizja
+//      Poprawka
 //
 // Możesz określić wszystkie wartości lub użyć domyślnych numerów kompilacji i poprawki
 // przy użyciu symbolu „*”, tak jak pokazano poniżej:

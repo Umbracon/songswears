@@ -3,20 +3,20 @@ using System.Collections.Generic;
 
 namespace SongSwears
 {
-    public class SwearStats : Censor
+    public class SwearStats : SwearsConverter
     {
         Dictionary<string, int> allSwears = new Dictionary<string, int>();
 
-        public void AddSwearsFrom(Song song)
+        public void AddSwears(Song song)
         {
-            foreach (var word in badWords)
+            foreach (var swear in badWords)
             {
-                var occurrences = song.CountOccurrence(word);
+                var occurrences = song.CountOccurrence(swear);
                 if (occurrences > 0)
                 { 
-                    if (!allSwears.ContainsKey(word))
-                        allSwears.Add(word, 0);
-                    allSwears[word] += occurrences;
+                    if (!allSwears.ContainsKey(swear))
+                        allSwears.Add(swear, 0);
+                    allSwears[swear] += occurrences;
                 }
             }
         }
